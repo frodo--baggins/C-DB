@@ -1,0 +1,10 @@
+*~
+*.o
+*.a
+*.la
+a.out
+*.dep
+core.*
+testfunc
+iltest
+test
