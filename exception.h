@@ -13,7 +13,14 @@
 #endif
 
 namespace cppdb {
-	
+		namespace _CPPDB_Private {
+			template<class CPPDBException>
+			void error(const std::string& message1, const std::string& message2) {
+				std::string err = message1;
+				err += message2;
+				throw CPPDBException(err);	
+			}
+		}	
 	class db_exception: public std::exception {
 		std::string x;
 	public:

@@ -1,10 +1,6 @@
 #ifndef CPPDB_MYSQL_RESULT_SET_H
 #define CPPDB_MYSQL_RESULT_SET_H
 
-#include <cppconn/driver.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <cppconn/connection.h>
 #include <string>
 #include <vector>
 #include <sstream>

@@ -1,52 +1,43 @@
-#ifndef CPPDB_MYSQL_STATEMENT_H
-#define CPPDB_MYSQL_STATEMENT_H
-
-#include <cppconn/driver.h>
-#include <cppconn/resultset.h>
-#include <cppconn/statement.h>
-#include <cppconn/connection.h>
+#include <my_global.h>
+#include <mysql.h>
+#include <string>
 #include "../statement.h"
 #include "../exception.h"
-#include "result_set.h"
-
-//#ifndef CPPDB_MYSQL_RESULT_SET_H
-//#error "<cppdb/mysql/result_set.h> must be included before <cppdb/mysql/statement.h>"
-//#endif
 
 namespace cppdb {
+	class result_set;
 	
 	class mysql_statement: public statement {
-		friend class mysql_connection; // Allow make_statement to call private constructor
-		sql::Connection* conn;
-		sql::Statement* stmt;
-		
-		explicit mysql_statement(sql::Connection* c, sql::Statement* st) : conn(c), stmt(st) {}
-		
+		MYSQL* conn;
 	public:
-		
-		virtual ~mysql_statement() { delete stmt; }
-		virtual result_set* query(const std::string& qry) {
-			bool has_result_set = stmt->execute(qry);
-			if(has_result_set) {
-				sql::ResultSet* res = stmt->getResultSet();
-				return new mysql_result_set(conn, res);
-			} else {
-				return NULL;
-			}
-		}
-		
-		virtual multi_query_t multi_query(const std::string& qrys) {
-			std::vector<std::string>* query_arr = _Impl::split(qrys, ';'); // Split the query string into individual statements,
-																								// separated by semicolons
-			size_t sz = query_arr->size();
-			multi_query_t mqt(sz);
-			for(size_t i = 0; i < sz; ++i) {
-				mqt[i] = query((*query_arr)[i]); // Pass each statement to query() and push back the results
-			}
-			delete query_arr;
-			return mqt;
-		}
-	}; // end class mysql_statement
-}
+		mysql_statement(MYSQL* c): conn(c) {}
+		virtual ~mysql_statement() {}
 
-#endif // CPPDB_MYSQL_STATEMENT_H
+		result_set* query(const std::string& qry) {
+			// Send a query to the MySQL server
+			// If successful, return a result_set pointer if the query yields a result set
+			// If the query does not yield a result set, return NULL
+			// If error, throw query_failure() using the error() function (see exception.h)
+			
+			using _CPPDB_Private::error; // For convenience
+			
+			if(mysql_query(conn, qry.c_str()) != 0) {
+				error<query_failure>("Could not perform query: ", mysql_error(conn));
+			} else {
+				MYSQL_RES* result = mysql_store_result(conn);
+				if(result) {
+					unsigned int num_fields = mysql_num_fields(result);
+					return NULL; // To be changed to "return new result_set(args);"
+				} else {
+					if(mysql_errno(conn)) {
+						error<query_failure>("Could not perform query: ",
+						mysql_error(conn));
+					} else {
+						// Query was a SELECT statement or something similar
+						return NULL;
+					}
+				}
+			}
+		}
+	};
+}
