@@ -2,9 +2,8 @@
 *.o
 *.a
 *.la
+*.gch
 a.out
 *.dep
 core.*
-testfunc
-iltest
-test
+*test*

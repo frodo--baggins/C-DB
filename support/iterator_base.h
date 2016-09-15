@@ -25,6 +25,7 @@ namespace cppdb {
 			polymorphic_iterator* pi;
 		public:
 			iterator_base(polymorphic_iterator* p): pi(p) {}
+			iterator_base(const iterator_base& rhs): pi(rhs.pi->clone()) {}
 			~iterator_base() { delete pi; }
 			bool equal_to(const iterator_base& ib) const {
 				return pi->equal_to(ib.pi);
