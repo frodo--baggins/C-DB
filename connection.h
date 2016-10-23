@@ -7,9 +7,9 @@ namespace cppdb {
 	class statement;
 	class prepared_statement;
 	
-	class connection {
+	class DBConnection {
 	public:
-		virtual ~connection() {}
+		virtual ~DBConnection() {}
 		virtual void select_database(const char* nme) = 0;
 		virtual void select_database(const std::string& nme) = 0;
 		virtual const char* database_name() const = 0;
@@ -20,7 +20,7 @@ namespace cppdb {
 	enum db_token { mysql, oracle, mssql };
 	
 	template<db_token DB>
-	connection* connect(const std::string& url, const std::string& user, const std::string& password);
+	DBConnection* connect(const std::string& url, const std::string& user, const std::string& password);
 }
 
 #endif // _CPPDB_CONNECTION_H

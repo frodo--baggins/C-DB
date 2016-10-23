@@ -4,7 +4,6 @@
 #include <my_global.h>
 #include <mysql.h>
 #include "../connection.h"
-#include "statement.h"
 #include "../exception.h"
 
 namespace cppdb {
@@ -14,7 +13,8 @@ namespace cppdb {
 	public:
 		mysql_connection(const std::string& url, const std::string& u, const std::string& p):
 		conn(mysql_init(NULL)), dbname("") {
-			if(mysql_real_connect(conn, url, u, p, NULL, 0, NULL, 0) == NULL) {
+			if(mysql_real_connect(conn, url.c_str(), u.c_str(),
+			  p.c_str(), NULL, 0, NULL, 0) == NULL) {
 				std::string err = "Could not connect to database: ";
 				err += mysql_error(conn);
 				mysql_close(conn);
@@ -38,10 +38,10 @@ namespace cppdb {
 		}
 		
 		virtual const char* database_name() const {
-			return dbname;	
+			return dbname.c_str();	
 		}
 		virtual statement* make_statement() {
-			return new mysql_statement(conn);
+			return nullptr;
 		}
 		//virtual prepared_statement* make_prepared_statement() = 0;
 	};
