@@ -9,22 +9,7 @@
 
 namespace cppdb {
 	
-	class Row {
-	protected:
-	
-		class ProxyImpl {
-			std::string str;
-		public:
-			ProxyImpl(const std::string& s = ""): str(s) {}
-			virtual ~ProxyImpl() {}
-			virtual void assign(const std::string& s) {
-				str = s;			
-			}
-			virtual std::string to_string() {
-				return str;			
-			}
-		};
-		
+	class Row {	
 	private:
 		size_t sz;
 		std::string* arr;
@@ -80,35 +65,6 @@ namespace cppdb {
 		}
 		
 		
-		class db_proxy {
-			ProxyImpl* impl;
-		public:
-			db_proxy(ProxyImpl* pi) : impl(pi) {}
-			~db_proxy() { delete impl; }
-			const std::string& operator=(const std::string& s) {
-				impl->assign(s); return s;
-			}
-			operator std::string() const { return impl->to_string(); }
-			bool operator==(const std::string& s) {
-				return impl->to_string() == s;				
-			}
-			bool operator!=(const std::string& s) {
-				return impl->to_string() != s;				
-			}
-			bool operator==(const db_proxy& dbp) {
-				return impl->to_string() == dbp.impl->to_string();				
-			}
-			bool operator!=(const db_proxy& dbp) {
-				return impl->to_string() != dbp.impl->to_string();				
-			}
-			
-			template<class charT, class Traits>
-			friend std::basic_ostream<charT, Traits>& operator<<(std::basic_ostream<charT, Traits>& out, const db_proxy& dbp) {
-				out << dbp.impl->to_string();
-				return out;				
-			}
-		};
-		
 		typedef size_t size_type;
 		
 		virtual std::string operator[](size_t idx) const {
@@ -125,22 +81,6 @@ namespace cppdb {
 		}
 		virtual std::string at(const std::string& key) const {
 			throw BadRowException("Unable to index into row using a column name (Perhaps you are using a row that was not retrieved from a database?)");		
-		}
-		
-		virtual db_proxy operator[](size_t idx) {
-			return db_proxy(new ProxyImpl(arr[idx]));		
-		}
-		virtual db_proxy operator[](const std::string& key) {
-			throw BadRowException("Unable to index into row using a column name (Perhaps you are using a row that was not retrieved from a database?)");		
-		}
-		virtual db_proxy at(size_t idx) {
-			if(idx >= sz) {
-				throw BadColumnException("Out of range error");			
-			}
-			return db_proxy(new ProxyImpl(arr[idx]));
-		}
-		virtual db_proxy at(const std::string& key) {
-			throw BadRowException("Unable to index into row using a column name (Perhaps you are using a row that was not retrieved from a database?)");
 		}
 		
 		virtual size_t size() const {

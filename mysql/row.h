@@ -22,46 +22,6 @@ namespace cppdb {
 
 		void fill_map() const;
 		void range_check(size_t idx) const;
-	protected:
-		class MySQLProxyImpl: public Row::ProxyImpl {
-			typedef Row::ProxyImpl ProxyImpl;
-			MYSQL* conn;
-			MYSQL_RES* res;
-			std::string* rw; // the row
-			int colnum;
-		public:
-			MySQLProxyImpl(const std::string& str, MYSQL* c, MYSQL_RES* rs, std::string* r,
-				int cn): ProxyImpl(str), conn(c), res(rs), rw(r), colnum(cn) {}
-			
-			virtual ~MySQLProxyImpl() {}
-			
-			virtual void assign(const std::string& s) {
-				using namespace Support;
-				ProxyImpl::assign(s);
-				AssignmentInfo ai = get_assignment_info(res, colnum);
-				std::string qry = "UPDATE "; // Query will be: "UPDATE tablename SET
-							     // rowname='s' WHERE primary_key=
-							     // 'primary_key_value'"
-				qry += ai.table_name;
-				qry += "SET ";
-				qry += ai.assign_col_name;
-				qry += "='";
-				qry += s;
-				qry += "' WHERE ";
-				qry += ai.key_name;
-				qry += "='";
-				qry += rw[ai.key_col];
-				qry += '\'';
-
-				if(mysql_query(conn, qry.c_str()) != 0) {
-					throw QueryFailureException("Could not assign new value");
-				}
-			}
-
-			virtual std::string to_string() {
-				return ProxyImpl::to_string();
-			}
-		};
 
 
 	public:
@@ -84,7 +44,11 @@ namespace cppdb {
 		MySQLRow(const Row& rhs, MYSQL* c, MYSQL_RES* r, size_t rn): Row(rhs), conn(c),
 			rownum(rn), ktrn(nullptr) {} 
 
-		virtual MySQLRow& operator=(const Row& rhs);
+		virtual MySQLRow& operator=(const Row& rhs) {
+			if(this == &rhs) return *this;
+
+			Row::operator=(rhs);
+		}
 
 		virtual ~MySQLRow() { delete ktrn; }
 
@@ -110,32 +74,6 @@ namespace cppdb {
 			size_t index = (*ktrn)[key];
 			range_check(index);
 			return Row::fetch_from_array(index);
-		}
-
-		virtual db_proxy operator[](size_t idx) {
-			return db_proxy(new MySQLProxyImpl(Row::fetch_from_array(idx), conn, res, 
-				Row::fetch_array(), idx));
-		}
-
-		virtual db_proxy operator[](const std::string& key) {
-			fill_map();
-			size_t index = (*ktrn)[key];
-			return db_proxy(new MySQLProxyImpl(Row::fetch_from_array(index), conn, res, 
-				Row::fetch_array(), index));
-		}
-
-		virtual db_proxy at(size_t idx) {
-			range_check(idx);
-			return db_proxy(new MySQLProxyImpl(Row::fetch_from_array(idx), conn, res, 
-				Row::fetch_array(), idx));
-		}
-
-		virtual db_proxy at(const std::string& key) {
-			fill_map();
-			size_t index = (*ktrn)[key];
-			range_check(index);
-			return db_proxy(new MySQLProxyImpl(Row::fetch_from_array(index), conn, res, 
-				Row::fetch_array(), index));
 		}
 
 		virtual Row* clone() const {

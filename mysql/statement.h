@@ -1,3 +1,6 @@
+#ifndef CPPDB_MYSQL_STATEMENT_H
+#define CPPDB_MYSQL_STATEMENT_H
+
 #include <my_global.h>
 #include <mysql.h>
 #include <string>
@@ -41,3 +44,5 @@ namespace cppdb {
 		}
 	};
 }
+
+#endif // CPPDB_MYSQL_STATEMENT_H
