@@ -21,6 +21,6 @@ void cppdb::MySQLConnection::select_database(const char* dbnme) {
 	dbname = dbnme;
 }
 
-cppdb::DBLock cppdb::MySQLConnection::lock_tables(const std::string... tables, LockType ltype) {
+/*cppdb::DBLock cppdb::MySQLConnection::lock_tables(const std::string... tables, LockType ltype) {
 	
-}
+}*/

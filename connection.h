@@ -20,8 +20,7 @@ namespace cppdb {
 		virtual void select_database(const std::string& nme) = 0;
 		virtual const char* database_name() const = 0;
 		virtual Statement* make_statement() = 0;
-		virtual DBLock lock_tables(LockType ltype, const std::string& first) = 0;
-		virtual DBLock lock_tables(LockType ltype, const std::string& first, const std::string... s) = 0;
+		// virtual DBLock lock_tables(LockType ltype, const std::string& first, const std::string... s) = 0;
 		// virtual prepared_statement* make_prepared_statement() = 0;
 	};
 	

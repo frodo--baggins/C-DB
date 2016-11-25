@@ -13,6 +13,7 @@ namespace cppdb {
 	class MySQLConnection: public DBConnection {
 		MYSQL* conn;
 		std::string dbname;
+		//std::string cat();
 	public:
 		MySQLConnection(const std::string& url, const std::string& u, const std::string& p);
 
@@ -32,7 +33,7 @@ namespace cppdb {
 		}
 		
 		
-		virtual DBLock lock_tables(LockType ltype, const std::string& first, const std::string... tables);
+		//virtual DBLock lock_tables(LockType ltype, const std::string& first, const std::string... tables);
 		//virtual prepared_statement* make_prepared_statement() = 0;
 	};
 	

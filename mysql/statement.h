@@ -8,15 +8,15 @@
 #include "../exception.h"
 
 namespace cppdb {
-	class result_set;
+	class ResultSet;
 	
-	class mysql_statement: public statement {
+	class MySQLStatement: public Statement {
 		MYSQL* conn;
 	public:
 		mysql_statement(MYSQL* c): conn(c) {}
 		virtual ~mysql_statement() {}
 
-		result_set* query(const std::string& qry) {
+		ResultSet* query(const std::string& qry) {
 			// Send a query to the MySQL server
 			// If successful, return a result_set pointer if the query yields a result set
 			// If the query does not yield a result set, return NULL
@@ -29,8 +29,7 @@ namespace cppdb {
 			} else {
 				MYSQL_RES* result = mysql_store_result(conn);
 				if(result) {
-					unsigned int num_fields = mysql_num_fields(result);
-					return NULL; // To be changed to "return new result_set(args);"
+					return new ResultSet(conn, result);
 				} else {
 					if(mysql_errno(conn)) {
 						error<query_failure>("Could not perform query: ",
