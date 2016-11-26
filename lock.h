@@ -17,7 +17,7 @@ namespace cppdb {
 	public:
 		DBLock(DBConnection* dbc, std::vector<std::string>* t): dbconn(dbc), tables(t) {}
 		~DBLock() {
-			dbconn->unlock_tables(*tables);
+			// dbconn->unlock_tables(*tables);
 			delete tables;
 		}
 		

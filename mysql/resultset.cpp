@@ -21,7 +21,7 @@ cppdb::MySQLResultSet::Data::~Data() {
 
 cppdb::MySQLResultSet::MySQLResultSet(MYSQL* c, MYSQL_RES* r): data(std::make_shared<Data>(c, r)) {}
 
-const cppdb::Row& cppdb::MySQLResultSet::at(size_t idx) {
-	if(idx >= sz) throw BadColumnException("Out of range error");
+const cppdb::Row& cppdb::MySQLResultSet::at(size_t idx) const {
+	if(idx >= data->sz) throw BadColumnException("Out of range error");
 	return *(data->rows[idx]);
 }

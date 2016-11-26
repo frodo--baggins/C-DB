@@ -6,8 +6,8 @@
 #include <string>
 #include <map>
 #include "../row.h"
-#include "../support/mysql/query.h"
-#include "../support/mysql/assignment_info.h"
+//#include "../support/mysql/query.h"
+//#include "../support/mysql/assignment_info.h"
 
 namespace cppdb {
 	

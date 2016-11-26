@@ -3,8 +3,8 @@
 
 #include "statement.h"
 #include "connection.h"
-#include "result_set.h"
-#include "mysql/result_set.h"
+#include "resultset.h"
+#include "mysql/resultset.h"
 #include "mysql/statement.h"
 #include "mysql/connection.h"
 

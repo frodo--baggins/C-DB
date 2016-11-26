@@ -28,18 +28,14 @@ namespace cppdb {
 		virtual const char* database_name() const {
 			return dbname.c_str();	
 		}
-		virtual Statement* make_statement() {
-			return nullptr;
-		}
+		virtual Statement* make_statement();
 		
 		
 		//virtual DBLock lock_tables(LockType ltype, const std::string& first, const std::string... tables);
 		//virtual prepared_statement* make_prepared_statement() = 0;
 	};
 	
-	template<> Connection* connect<mysql>(const std::string& url, const std::string& user, const std::string& pass) {
-		return new mysql_connection(url, user, pass);	
-	}
+	template<> DBConnection* connect<mysql>(const std::string& url, const std::string& user, const std::string& pass);
 } // namespace cppdb
 
 #endif // CPPDB_MYSQL_CONNECTION_H

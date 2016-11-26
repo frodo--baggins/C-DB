@@ -13,7 +13,7 @@ namespace cppdb {
 	class DBConnection {
 		friend class DBLock;
 	protected:
-		virtual void unlock_tables(const std::vector<std::string>& v) = 0;
+		// virtual void unlock_tables(const std::vector<std::string>& v) = 0;
 	public:
 		virtual ~DBConnection() {}
 		virtual void select_database(const char* nme) = 0;

@@ -5,8 +5,8 @@
 #include <mysql.h>
 #include <memory>
 #include "../resultset.h"
-#include "../support/mysql/assignment_info.h"
-#include "../support/mysql/query.h"
+//#include "../support/mysql/assignment_info.h"
+//#include "../support/mysql/query.h"
 #include "../support/mysql/mysql_polymorphic_iterator.h"
 #include "row.h"
 
