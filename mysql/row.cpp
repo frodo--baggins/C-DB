@@ -2,6 +2,7 @@
 
 void cppdb::MySQLRow::fill_map() const { // the map is mutable, but only so that it can be filled
 					 // the first time
+
 	if(ktrn != nullptr) return; // We've already filled the map
 
 	MYSQL_FIELD* field = mysql_fetch_field(res);

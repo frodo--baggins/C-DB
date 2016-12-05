@@ -25,7 +25,7 @@ namespace cppdb {
 
 
 	public:
-		MySQLRow(MYSQL* c, MYSQL_RES* r, MYSQL_ROW rw, size_t rn): Row(mysql_num_fields(res)), 
+		MySQLRow(MYSQL* c, MYSQL_RES* r, MYSQL_ROW rw, size_t rn): Row(mysql_num_fields(r)), 
 			conn(c), res(r), rownum(rn), ktrn(nullptr) {
 			
 			for(size_t i = 0; i < Row::size(); ++i) {

@@ -30,7 +30,7 @@ namespace cppdb {
 					mysql_error(conn));
 			} else {
 				MYSQL_RES* result = mysql_store_result(conn);
-				if(result) {
+				if(result != nullptr) {
 					return new MySQLResultSet(conn, result);
 				} else {
 					if(mysql_errno(conn)) { // Error in retrieving the result set

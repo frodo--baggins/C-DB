@@ -51,6 +51,7 @@ namespace cppdb {
 		iterator(): pi(nullptr) {}
 		iterator(Support::polymorphic_iterator* p): pi(p) {}
 		iterator(const iterator& rhs): pi(rhs.pi->clone()) {}
+		~iterator() { delete pi; }
 		
 		Row& operator*() { return pi->get_reference(); }
 		Row* operator->() { return pi->get_pointer(); }
@@ -79,6 +80,10 @@ namespace cppdb {
 
 		friend bool operator==(const iterator& lhs, const iterator& rhs) {
 			return lhs.pi->equal_to(rhs.pi);
+		}
+
+		friend bool operator!=(const iterator& lhs, const iterator& rhs) {
+			return !lhs.pi->equal_to(rhs.pi);
 		}
 	};
 }
